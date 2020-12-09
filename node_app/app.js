@@ -53,8 +53,8 @@ app.post("/upload"  ,
   (req, res) => {
     const tempPath = req.file.path;
     const targetPath = path.join(__dirname, "./uploads/image.jpg");
-
-    if (path.extname(req.file.originalname).toLowerCase() === ".jpg") {
+    //path.extname(req.file.originalname).toLowerCase() === ".jpg"
+    if (true) {
       // fs.rename(tempPath, targetPath, err => {
       //   if (err) return handleError(err, res);
       //   res
@@ -95,16 +95,20 @@ app.post("/upload"  ,
 );
 
 app.get("/Background",(req,res) =>{
-
   var parsedUrl = url.parse(req.url);
   var qs = querystring.parse(parsedUrl.query);
-  var num = qs.select
-  console.log(qs.select);
-  var formData ={
-    "file":fs.createReadStream('./out.png'),
-    "data":{num}
-  }
-  request.post({url:'http://127.0.0.1:5000/select', formData: formData,headers:{"Content-Type": "multipart/form-data"}}, function optionalCallback(err, httpResponse, body) {
+  
+  const options = {
+    uri : 'http://127.0.0.1:5000/select',
+    method : 'POST',
+    form : {
+      "file": fs.createReadStream('./out.png'),
+      "data": qs.select,
+    },
+    headers:{"Content-Type": "multipart/form-data"}
+  };
+
+  request.post(options, function optionalCallback(err, httpResponse, body) {
         if (err) {
           return console.error('upload failed:', err);
         }
@@ -116,6 +120,7 @@ app.get("/Background",(req,res) =>{
         });
         //res.redirect('/result')
       });
+  console.log("selected"+qs.select);
 });
 
 function base64_encode(file) {

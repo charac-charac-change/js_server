@@ -65,16 +65,17 @@ def remove():
 @app.route("/select", methods=["POST"])
 def select():
     start = time.time()
-    print('request'+str(request.get_data()))
-    if 'file' not in request.files:
-        return jsonify({'error': 'missing file'}), 400
+    print("selected"+request.form["data"])
+    print('request'+str(request.form))
+    #if 'file' not in request.files:
+    #    return jsonify({'error': 'missing file'}), 400
 
     #print(request.files['file'].read())
 
     # if request.files['file'].filename.rsplit('.', 1)[1].lower() not in ["jpg", "png", "jpeg"]:
     #     return jsonify({'error': 'invalid file format'}), 400
-
-    data = request.files['file'].read()
+    #data = request.form["data"]
+    #data = request.form.
     print(len(data))
     if len(data) == 0:
         return jsonify({'error': 'empty image'}), 400

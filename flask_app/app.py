@@ -4,6 +4,7 @@ import io
 import time
 import base64
 import logging
+import sys
 
 import numpy as np
 from PIL import Image
@@ -13,7 +14,10 @@ from flask import Flask, request, send_file, jsonify
 from flask_cors import CORS
 
 import detect
+sys.path.append('./stylegan2/')
 
+
+from stylegan2.test import inference
 
 app = Flask(__name__)
 CORS(app)
@@ -46,7 +50,11 @@ def remove():
         return jsonify({'error': 'empty image'}), 400
 
     img = Image.open(io.BytesIO(data))
-
+    img.save("./stylegan2/raw/image.png")
+    start = time.time()
+    inference()
+    print('infer: '+str(time.time()-start))
+    img = Image.open('./stylegan2/generated/image_01.png')
     output = detect.predict(net, np.array(img))
     output = output.resize((img.size), resample=Image.BILINEAR) # remove resample
 
